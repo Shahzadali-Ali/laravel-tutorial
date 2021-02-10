@@ -1,24 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
+use App\Post;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
 {
-    public function show($post)
+    public function show($slug)
     {
-    $posts = [
-    'my-first-post' => 'Hello This is my first post',
-    'my-second-post' => 'Welcome to my second post',
-    ];
-    if(!array_key_exists($post, $posts))
+       
+       //$post = .\DB::table('posts')->where('slug', $slug)->first(); // this line is not working to me
+      //$post = DB::table('posts')->where('slug', $slug)->first(); 
+        $post = Post::where('slug', $slug)->firstOrFail();   
+      //dd($post);
+  
+    if(!$post)
     {
-        abort('404', 'Sorry ! The post was not found' );
+        abort('404');
     }
 
     return view('post',[
-        'post' =>   $posts[$post] ?? 'Nothing Here Yet'
+        'post' =>   $post
     ]);
     }
 }
